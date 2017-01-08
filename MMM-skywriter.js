@@ -1,14 +1,20 @@
 Module.register("MMM-skywriter",{
 
-	gesture_up: 0,
-	gesture_right: 0,
-
 	// Override socket notification handler.
 	socketNotificationReceived: function(notification, payload) {
-		if (notification === "SKYWRITER_GESTURE") {
-			const self = this;
+		console.log ("socketnotificationreceived.", notification, payload);
+		if (notification.startsWith("SKYWRITER_")) {
+			if (notification === 'SKYWRITER_STATUS') {
+				Log.log(notification, payload);
+				if (payload === 'python_end') {
+					// Restart python
+					this.sendSocketNotification('CONFIG', this.config);
+				}
+			} else {
+				this.sendNotification(notification, payload);
+			}
 
-			console.log ("socketnotificationreceived.");
+			/*const self = this;
 
 			self.sendNotification(notification, payload);
 
@@ -37,22 +43,21 @@ Module.register("MMM-skywriter",{
 						Log.log(module.name + ' is hidden by gesture.');
 					});
 				});
-			}
+			}*/
 		}
 	},
 
 	notificationReceived: function(notification, payload, sender) {
-		if (notification === 'DOM_OBJECTS_CREATED') {
+		/*if (notification === 'DOM_OBJECTS_CREATED') {
 			MM.getModules().exceptWithClass("default").enumerate(function(module) {
 				module.hide(1000, function() {
 					Log.log('Module is hidden.');
 				});
 			});
-		}
+		}*/
 	},
 
 	start: function() {
-		this.current_user = null;
 		this.sendSocketNotification('CONFIG', this.config);
 		Log.info('Starting module: ' + this.name);
 	}
