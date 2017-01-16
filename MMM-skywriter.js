@@ -3,7 +3,7 @@ Module.register("MMM-skywriter",{
 	// Override socket notification handler.
 	socketNotificationReceived: function(notification, payload) {
 		console.log ("socketnotificationreceived.", notification, payload);
-		if (notification.startsWith("SKYWRITER_")) {
+		if (notification.lastIndexOf("SKYWRITER_", 0) === 0) {
 			if (notification === 'SKYWRITER_STATUS') {
 				Log.log(notification, payload);
 				if (payload === 'python_end') {
